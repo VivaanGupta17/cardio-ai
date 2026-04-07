@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# PyTorch / ML
+*.pt
+*.pth
+*.pkl
+*.h5
+*.onnx
+runs/
+wandb/
+lightning_logs/
+mlruns/
+
+# Data (do not commit ECG data)
+data/
+datasets/
+*.npy
+*.csv
+!requirements*.txt
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+*.ipynb
+
+# TensorBoard
+tensorboard/
+logs/
+
+# Results
+results/
+predictions/
+checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Config overrides (local)
+configs/local_*.yaml
+.env.local

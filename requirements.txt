@@ -1,0 +1,68 @@
+# CardioAI: ECG Arrhythmia Detection Requirements
+# Python >= 3.9
+
+# ─────────────────────────────────────────────
+# Core ML Framework
+# ─────────────────────────────────────────────
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+
+# ─────────────────────────────────────────────
+# Scientific Computing
+# ─────────────────────────────────────────────
+numpy>=1.24.0
+scipy>=1.10.0
+pandas>=2.0.0
+
+# ─────────────────────────────────────────────
+# Machine Learning / Evaluation
+# ─────────────────────────────────────────────
+scikit-learn>=1.2.0
+
+# ─────────────────────────────────────────────
+# ECG / Physiological Data
+# ─────────────────────────────────────────────
+wfdb>=4.0.0            # WFDB PhysioNet format reader
+neurokit2>=0.2.0       # Advanced ECG analysis, HRV, peak detection
+
+# ─────────────────────────────────────────────
+# Visualization
+# ─────────────────────────────────────────────
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.14.0
+
+# ─────────────────────────────────────────────
+# Logging / Experiment Tracking
+# ─────────────────────────────────────────────
+tensorboard>=2.13.0
+tensorboardX>=2.6.0
+
+# ─────────────────────────────────────────────
+# Configuration
+# ─────────────────────────────────────────────
+pyyaml>=6.0
+
+# ─────────────────────────────────────────────
+# Notebooks
+# ─────────────────────────────────────────────
+jupytext>=1.14.0        # percent-format notebook support
+ipykernel>=6.0.0
+
+# ─────────────────────────────────────────────
+# Development / Testing
+# ─────────────────────────────────────────────
+pytest>=7.0.0
+pytest-cov>=4.0.0
+black>=23.0.0
+ruff>=0.0.280
+mypy>=1.0.0
+
+# ─────────────────────────────────────────────
+# Optional: GPU Acceleration
+# ─────────────────────────────────────────────
+# For CUDA 11.8:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+# For CUDA 12.1:
+# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121

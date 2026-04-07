@@ -1,0 +1,121 @@
+# PTB-XL Training Configuration
+# CardioAI: ECG Arrhythmia Detection
+
+# ─────────────────────────────────────────────
+# Dataset
+# ─────────────────────────────────────────────
+data:
+  data_dir: "/data/ptb-xl"          # Path to PTB-XL root directory
+  sampling_rate: 500                 # Hz (100 or 500)
+  label_type: "diagnostic_superclass"  # diagnostic_superclass | rhythm | form | all
+  min_confidence: 0.0                # Minimum SCP annotation confidence
+  num_workers: 8
+  cache_data: false                  # Set true if RAM > 16GB for speedup
+  batch_size: 64
+
+# ─────────────────────────────────────────────
+# Model
+# ─────────────────────────────────────────────
+model:
+  architecture: "ecg_resnet"         # ecg_resnet | ecg_transformer | ecg_lstm | ensemble
+  num_classes: 5                     # 5 for superclass, 27 for all
+  in_channels: 12
+  # ResNet-specific
+  base_filters: 64
+  use_se: true
+  dropout: 0.5
+  # Transformer-specific
+  d_model: 256
+  n_heads: 8
+  n_temporal_layers: 4
+  n_lead_layers: 4
+  patch_size: 50
+  d_ff: 1024
+
+# ─────────────────────────────────────────────
+# Training
+# ─────────────────────────────────────────────
+training:
+  epochs: 100
+  lr: 1e-3
+  weight_decay: 1e-4
+  scheduler: "cosine"                # cosine | onecycle
+  T_0: 20                            # Cosine restart period
+  T_mult: 2
+  min_lr: 1e-6
+  grad_clip: 1.0
+  mixed_precision: true
+  early_stop_patience: 15
+
+  # Loss function
+  loss: "asl"                        # focal | asl | combined | bce
+  focal_alpha: 0.25
+  focal_gamma: 2.0
+  asl_gamma_neg: 4.0
+  asl_gamma_pos: 1.0
+
+  # Class weighting
+  use_class_weights: true
+  max_class_weight: 10.0
+
+# ─────────────────────────────────────────────
+# Augmentation
+# ─────────────────────────────────────────────
+augmentation:
+  mode: "train"                      # train | light | val
+  fs: 500.0
+  gaussian_noise:
+    snr_db_range: [25.0, 40.0]
+    p: 0.5
+  baseline_wander:
+    p: 0.5
+  amplitude_scale:
+    scale_range: [0.75, 1.25]
+    p: 0.5
+  time_shift:
+    max_shift_ms: 150.0
+    p: 0.4
+  lead_dropout:
+    n_leads_to_drop_range: [0, 2]
+    p: 0.25
+  time_warp:
+    p: 0.3
+
+# ─────────────────────────────────────────────
+# Evaluation
+# ─────────────────────────────────────────────
+evaluation:
+  operating_specificities: [0.85, 0.90, 0.95]
+  bootstrap_n: 1000
+  classification_threshold: 0.5
+
+# ─────────────────────────────────────────────
+# Real-Time Monitoring
+# ─────────────────────────────────────────────
+monitoring:
+  window_size_s: 10.0
+  step_size_s: 2.0
+  min_sqi: 0.50
+  ensemble_window: 3
+  enable_duration_gating: true
+  enable_refractory: true
+  enable_sqi_gating: true
+  enable_ensemble_voting: true
+
+# ─────────────────────────────────────────────
+# Logging and Output
+# ─────────────────────────────────────────────
+output:
+  base_dir: "runs"
+  experiment_name: "ptbxl_resnet_v1"
+  save_checkpoint_every_n: 10
+  tensorboard: true
+  log_level: "INFO"
+
+# ─────────────────────────────────────────────
+# Hardware
+# ─────────────────────────────────────────────
+hardware:
+  device: "auto"                     # auto | cuda | cpu | mps
+  precision: "float16"               # float32 | float16 | bfloat16
+  compile_model: false               # torch.compile() for PyTorch 2.0+

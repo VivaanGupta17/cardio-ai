@@ -676,3 +676,5 @@ if __name__ == "__main__":
     print(f"Alerts fired: {summary['total_alerts_fired']}")
     print(f"Alerts suppressed: {summary['total_alerts_suppressed']}")
     print(f"Suppression rate: {summary['suppression_rate']:.1%}")
+
+# Configurable alert cooldown period

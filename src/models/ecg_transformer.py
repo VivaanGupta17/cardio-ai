@@ -294,13 +294,18 @@ class ECGTransformer(nn.Module):
         x: torch.Tensor,
         return_attention: bool = False,
     ) -> Dict[str, torch.Tensor]:
-        """
+        """Forward pass through the two-level ECG transformer.
+
         Args:
-            x: (B, 12, T) — 12-lead ECG
-            return_attention: Return per-lead attention weights.
+            x: Input tensor of shape (B, 12, T) where B is batch size,
+               12 is the number of leads, and T is the sequence length
+               (typically 5000 for 10 s at 500 Hz).
+            return_attention: If True, include per-lead attention weights
+               in the output dict. Useful for interpretability.
 
         Returns:
-            dict with 'logits', 'probs', and optionally 'lead_attention'
+            dict with keys 'logits' (B, num_classes), 'probs' (B, num_classes),
+            and optionally 'lead_attention' (B, 12) if return_attention=True.
         """
         B, L, T = x.shape
         assert L == self.n_leads
@@ -338,6 +343,16 @@ class ECGTransformer(nn.Module):
             # Slice CLS → lead tokens: (B, n_heads, 12)
             out["lead_attention"] = lead_attn_weights[-1][:, :, 0, 1:]
         return out
+
+    @torch.no_grad()
+    def predict(self, x: torch.Tensor) -> Dict[str, torch.Tensor]:
+        """Memory-efficient inference wrapper (no gradient tracking).
+
+        Use this instead of forward() during deployment to avoid
+        storing intermediate activations.
+        """
+        self.eval()
+        return self.forward(x, return_attention=False)
 
 
 # ─────────────────────────────────────────────

@@ -326,6 +326,13 @@ class GradCAMWrapper(nn.Module):
         cam = (cam - cam_min) / (cam_max - cam_min + 1e-8)
 
         return probs, cam
+
+    @torch.no_grad()
+    def predict(self, x: torch.Tensor) -> Dict[str, torch.Tensor]:
+        """Memory-efficient inference (no gradient tracking)."""
+        self.eval()
+        return self.forward(x)
+
 # ─────────────────────────────────────────────
 #  Factory
 # ─────────────────────────────────────────────

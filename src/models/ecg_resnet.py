@@ -18,8 +18,6 @@ from typing import Dict, List, Optional, Tuple
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
 # ─────────────────────────────────────────────
 #  Building Blocks
 # ─────────────────────────────────────────────
@@ -46,8 +44,6 @@ class SEBlock1d(nn.Module):
         s = self.pool(x).squeeze(-1)           # (B, C)
         s = self.fc(s).unsqueeze(-1)           # (B, C, 1)
         return x * s
-
-
 class ResBlock1d(nn.Module):
     """Basic 1D residual block with optional SE attention.
 
@@ -103,8 +99,6 @@ class ResBlock1d(nn.Module):
         out = self.se(out)
 
         return out + residual
-
-
 class MultiScaleBlock1d(nn.Module):
     """Multi-scale feature extraction block using parallel convolutions.
 
@@ -146,8 +140,6 @@ class MultiScaleBlock1d(nn.Module):
             self.branch15(x),
             self.branch31(x),
         ], dim=1)
-
-
 # ─────────────────────────────────────────────
 #  Main Model
 # ─────────────────────────────────────────────
@@ -268,8 +260,6 @@ class ECGResNet(nn.Module):
         if return_features:
             out["features"] = features
         return out
-
-
 # ─────────────────────────────────────────────
 #  Gradient-CAM Wrapper (interpretability)
 # ─────────────────────────────────────────────
@@ -336,8 +326,6 @@ class GradCAMWrapper(nn.Module):
         cam = (cam - cam_min) / (cam_max - cam_min + 1e-8)
 
         return probs, cam
-
-
 # ─────────────────────────────────────────────
 #  Factory
 # ─────────────────────────────────────────────
@@ -351,8 +339,6 @@ def build_ecg_resnet(config: dict) -> ECGResNet:
         dropout=config.get("dropout", 0.5),
         use_se=config.get("use_se", True),
     )
-
-
 # ─────────────────────────────────────────────
 #  Sanity check
 # ─────────────────────────────────────────────
